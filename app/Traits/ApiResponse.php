@@ -4,14 +4,13 @@ namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
 
-
-//standart response formatı için controllerde kullanabilecigim 
-//trait tanımladım
+// standart response formatı için controllerde kullanabilecigim
+// trait tanımladım
 trait ApiResponse
 {
     public function success(
         mixed $data = null,
-        string $message = 'Başarılı',
+        string $message = 'OK',
         int $statusCode = 200,
         array $meta = [],
         array $headers = []
@@ -22,7 +21,7 @@ trait ApiResponse
             'data' => $data ?? (object) [],
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
@@ -30,7 +29,7 @@ trait ApiResponse
     }
 
     public function error(
-        string $message = 'Hata',
+        string $message = 'Error',
         int $statusCode = 400,
         array|string $errors = [],
         array $meta = [],
@@ -44,7 +43,7 @@ trait ApiResponse
             'error_code' => $errorCode,
         ];
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $response['meta'] = $meta;
         }
 
