@@ -137,10 +137,6 @@ class ReservationService
                 ->lockForUpdate()
                 ->findOrFail($reservationId);
 
-            if ($lockedReservation->status === ReservationStatus::Released) {
-                return $lockedReservation->load(['items.product.latestPrice', 'items.product.stock']);
-            }
-
             if ($lockedReservation->status !== ReservationStatus::Active) {
                 throw ValidationException::withMessages([
                     'reservation' => ['Only active reservations can be released.'],
