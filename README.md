@@ -1,6 +1,3 @@
-# Forsit
-
-Forsit, Laravel 13 tabanlı bir ürün, stok, sepet teklifleme ve rezervasyon API projesidir.
 
 ## Özellikler
 
@@ -21,15 +18,6 @@ Sanal stok hesabı (`quantity - reserved`) tercih edildi. Daha az yazma operasyo
 **Expired rezervasyonlar:**
 Şu an sorgu seviyesinde dışlanıyor. Üretimde bir `ExpireReservationsJob` ile `active → expired` geçişi scheduler'a bağlanabilir. Bu sayede raporlama ve temizlik işlemleri netleşir.
 
-## Teknolojiler
-
-- PHP 8.4
-- Laravel 13
-- MySQL
-- PHPUnit
-
-
----
 
 ## Veri Modeli
 
