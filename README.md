@@ -10,6 +10,12 @@
 - Seeder ile örnek katalog ve rezervasyon akış verisi
 - Feature test kapsamı
 
+## Postman Koleksiyonu
+
+ Postman koleksiyonunu buradan indirebilir ve test edebilirsiniz :
+
+[Postman Koleksiyonu - Forsit API ](./postman/Forsit_API_TR.postman_collection.json)
+
 ## Trade-off'lar ve Üretim Notları
 
 **Fiziksel stok azaltma vs. sanal stok hesabı:**

@@ -1,0 +1,228 @@
+{
+  "info": {
+    "_postman_id": "8a8bd8f1-8b7f-4d27-a4a1-8fe9c286f001",
+    "name": "Forsit API - Türkçe",
+    "description": "Forsit projesi için Türkçe Postman koleksiyonu. Ürün listeleme, sepet quote, rezervasyon oluşturma ve rezervasyon release akışlarını içerir.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "reservationId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "idempotencyKey",
+      "value": "postman-order-001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Ürünler",
+      "item": [
+        {
+          "name": "Ürünleri Listele",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Tüm ürünleri listeler.",
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ürünleri Filtrele ve Ara",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Arama, aktiflik, stok ve sayfalama parametreleriyle ürünleri filtreler.",
+            "url": {
+              "raw": "{{baseUrl}}/products?search=Forsit&is_active=1&in_stock=1&per_page=5&page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Forsit"
+                },
+                {
+                  "key": "is_active",
+                  "value": "1"
+                },
+                {
+                  "key": "in_stock",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "5"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sepet",
+      "item": [
+        {
+          "name": "Sepet Teklifi Al",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Seçilen ürünler için quote hesabı yapar. Fiyatı istemci gönderemez, sunucu veritabanından hesaplar.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": {{productId}},\n      \"quantity\": 2\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "quote"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rezervasyonlar",
+      "item": [
+        {
+          "name": "Rezervasyon Oluştur",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.data && json.data.id) {",
+                  "        pm.collectionVariables.set('reservationId', json.data.id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Yeni rezervasyon oluşturur. Aynı idempotency_key ile tekrar çağrılırsa aynı rezervasyonu döndürür.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_key\": \"{{idempotencyKey}}\",\n  \"customer_email\": \"customer@example.com\",\n  \"expires_at\": \"2026-12-31T12:00:00Z\",\n  \"items\": [\n    {\n      \"product_id\": {{productId}},\n      \"quantity\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aynı Idempotency Key ile Tekrar Dene",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Aynı idempotency_key ile tekrar çağrıldığında yeni kayıt açılmadığını test etmek için kullanılır.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotency_key\": \"{{idempotencyKey}}\",\n  \"customer_email\": \"customer@example.com\",\n  \"expires_at\": \"2026-12-31T12:00:00Z\",\n  \"items\": [\n    {\n      \"product_id\": {{productId}},\n      \"quantity\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rezervasyonu Release Et",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Aktif rezervasyonu release eder. `reservationId` değişkeni bir önceki oluşturma isteğinden otomatik set edilebilir.",
+            "url": {
+              "raw": "{{baseUrl}}/reservations/{{reservationId}}/release",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                "{{reservationId}}",
+                "release"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
